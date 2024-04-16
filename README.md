@@ -3,6 +3,7 @@
  - npm i -D parcel
  - npm i react
  - npm i react-dom
+ - npm i react-router-dom
 
  - set the tailwind css
 

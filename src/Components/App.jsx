@@ -1,8 +1,6 @@
+import Body from "./Body";
+
 const App = () => {
-  return (
-    <div className="border">
-      <h1>Hello, welcome to Moviie GPT</h1>
-    </div>
-  );
+  return <Body />;
 };
 export default App;
