@@ -1,51 +1,160 @@
-import React from "react";
-import Header from "./Header";
-import { Link } from "react-router-dom";
+// imports from the library
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
+//imports from the components
+import { addDetail, removeDetail } from "../Utils/UserSlice";
+import Header from "./Header";
+import { auth } from "../Utils/firebase";
 import { BG_URL } from "../Utils/Constants";
+import ValidateEmailAndPassword from "../Utils/ValidateEmailAndPassword";
 
 const Login = () => {
+  //useState hook for storing the state
+  const [isFormSignIn, setIsFormSignIn] = useState(true);
+  const [formSignIn, setFormSignIn] = useState("SignIn");
+  const [errorMessage, setErrorMessage] = useState(null);
+  //useRef hook for referring the value stored in the input field
+  const fullName = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  //useDispatch hook for triggering the action to update the redux store
+  const dispatchUser = useDispatch();
+  //useNavigate hook to navigate to other routes
+  const navigate = useNavigate();
+
   return (
     <div className="">
       <Header />
       <div className="absolute">
         <img src={BG_URL} />
       </div>
-      <div className="absolute flex flex-col border w-[500px] p-5 bg-slate-900 mx-[35%] my-24">
-        <div className="text-white text-2xl m-2">Sign In</div>
-        <input
-          type="text"
-          placeholder="Email or phone number"
-          className="border border-white rounded-lg bg-black p-3 m-2 text-white"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border border-white rounded-lg bg-black p-3 m-2 text-white"
-        />
-        <button className="border bg-red-600 text-white m-2 p-3 rounded-lg">
-          Sign In
-        </button>
-        <div className="text-white flex justify-center">OR</div>
-        <button className="border bg-gray-500 text-white m-2 p-2 rounded-lg">
-          Use a sign-in-code
-        </button>
-        <Link to="/forgot" className="text-white flex justify-center">
-          Forgot Password?
-        </Link>
-        <div className="flex m-2">
-          <input type="checkbox"></input>
-          <div className="text-white m-2">Remember me</div>
-        </div>
-        <div className="text-white m-2">
-          New to Netflix?{" "}
-          <Link to="/signup" className="font-bold">
-            Sign up now.
-          </Link>
-        </div>
-        <div className="text-white m-2 text-sm">
-          This page is protected by Google reCAPTCHA to ensure you're not a bot.{" "}
-          <Link className="text-sm text-blue-600">Learn more</Link>
+      <div className="absolute flex flex-col border w-[500px] p-5 bg-black opacity-80 mx-[35%] my-24 text-white">
+        <form
+          action=""
+          onSubmit={(e) => e.preventDefault()}
+          className="text-white flex flex-col m-3 p-2"
+        >
+          <label className="text-lg font-bold">{formSignIn}</label>
+          {!isFormSignIn && (
+            <input
+              ref={fullName}
+              type="text"
+              placeholder="Full Name"
+              className="border border-white rounded-lg bg-black p-3 m-2"
+            />
+          )}
+
+          <input
+            ref={email}
+            type="text"
+            placeholder="Email"
+            className="border border-white rounded-lg bg-black p-3 m-2 text-white"
+          />
+
+          <input
+            ref={password}
+            type="password"
+            placeholder="Password"
+            className="border border-white rounded-lg bg-black p-3 m-2 text-white"
+          />
+          <label className="text-red-400">{errorMessage}</label>
+          <button
+            className="border bg-red-600 text-white m-2 p-3 rounded-lg"
+            onClick={() => {
+              //check whether the email and password are in correct regex or not
+              const message = ValidateEmailAndPassword(
+                email.current.value,
+                password.current.value
+              );
+              //if any of the field is not valid, display the error
+              setErrorMessage(message);
+              if (message != null) return;
+
+              /**
+               * create a new user with email and password
+               * update the user details
+               * add the details to the redux store
+               * navigate to the browser page
+               */
+              if (!isFormSignIn) {
+                createUserWithEmailAndPassword(
+                  auth,
+                  email.current.value,
+                  password.current.value
+                )
+                  .then((UserCredential) => {
+                    const user = UserCredential.user;
+                    updateProfile(user, {
+                      displayName: fullName.current.value,
+                    })
+                      .then(() => {
+                        const { uid, displayName, email } = user;
+                        dispatchUser(
+                          addDetail({
+                            id: uid,
+                            name: displayName,
+                            email: email,
+                          })
+                        );
+                        navigate("/browse");
+                      })
+                      .catch((error) => {
+                        setErrorMessage(`${error.code} - ${error.message}`);
+                      });
+                  })
+                  .catch((error) => {
+                    setErrorMessage(`${error.code} - ${error.message}`);
+                  });
+              } else {
+                /**
+                 * login the existing user
+                 * upon sign in, add the details to the redux store
+                 * navigate to the browse page
+                 */
+                signInWithEmailAndPassword(
+                  auth,
+                  email.current.value,
+                  password.current.value
+                )
+                  .then((UserCredential) => {
+                    const user = UserCredential.user;
+                    const { uid, displayName, email } = user;
+                    dispatchUser(
+                      addDetail({ id: uid, name: displayName, email: email })
+                    );
+                    navigate("/browse");
+                  })
+                  .catch((error) => {
+                    setErrorMessage(`${error.code} - ${error.message}`);
+                  });
+              }
+            }}
+          >
+            {formSignIn}
+          </button>
+        </form>
+        <div
+          className=" m-2 flex cursor-pointer"
+          onClick={() => {
+            if (isFormSignIn) {
+              setFormSignIn("SignUp");
+              setIsFormSignIn(false);
+            } else {
+              setFormSignIn("SignIn");
+              setIsFormSignIn(true);
+            }
+          }}
+        >
+          {isFormSignIn
+            ? "New to Netflix? SignUp now"
+            : "Already have a account? Login now"}
         </div>
       </div>
     </div>
