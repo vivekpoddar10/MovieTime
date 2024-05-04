@@ -103,7 +103,6 @@ const Login = () => {
                             email: email,
                           })
                         );
-                        navigate("/browse");
                       })
                       .catch((error) => {
                         setErrorMessage(`${error.code} - ${error.message}`);
@@ -125,11 +124,6 @@ const Login = () => {
                 )
                   .then((UserCredential) => {
                     const user = UserCredential.user;
-                    const { uid, displayName, email } = user;
-                    dispatchUser(
-                      addDetail({ id: uid, name: displayName, email: email })
-                    );
-                    navigate("/browse");
                   })
                   .catch((error) => {
                     setErrorMessage(`${error.code} - ${error.message}`);
