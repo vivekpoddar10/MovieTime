@@ -1,21 +1,12 @@
-import React, { useEffect } from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useNavigate,
-} from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Login from "./Login";
 import Browse from "./Browse";
-import Forgot from "./Forgot";
-import SignUp from "./SignUp";
-import { auth } from "../Utils/firebase";
-import { addDetail, removeDetail } from "../Utils/UserSlice";
 
 const Body = () => {
   
+  // TODO: create routes for different pages
   const router = createBrowserRouter([
     {
       path: "/",
@@ -25,17 +16,8 @@ const Body = () => {
       path: "/browse",
       element: <Browse />,
     },
-    {
-      path: "/forgot",
-      element: <Forgot />,
-    },
-    {
-      path: "/signup",
-      element: <SignUp />,
-    },
   ]);
 
- 
   return <RouterProvider router={router} />;
 };
 export default Body;

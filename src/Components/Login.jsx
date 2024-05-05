@@ -1,6 +1,6 @@
 // imports from the library
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react";
+
 import { useDispatch } from "react-redux";
 import {
   createUserWithEmailAndPassword,
@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 
 //imports from the components
-import { addDetail, removeDetail } from "../Utils/UserSlice";
+import { addDetail } from "../Store/userSlice";
 import Header from "./Header";
 import { auth } from "../Utils/firebase";
 import { BG_URL } from "../Utils/Constants";
@@ -26,8 +26,6 @@ const Login = () => {
   const password = useRef(null);
   //useDispatch hook for triggering the action to update the redux store
   const dispatchUser = useDispatch();
-  //useNavigate hook to navigate to other routes
-  const navigate = useNavigate();
 
   return (
     <div className="">
@@ -78,10 +76,10 @@ const Login = () => {
               if (message != null) return;
 
               /**
-               * create a new user with email and password
-               * update the user details
-               * add the details to the redux store
-               * navigate to the browser page
+               * TODO: create a new user with email and password
+               * TODO: update the user details
+               * TODO: add the details to the user slice
+            
                */
               if (!isFormSignIn) {
                 createUserWithEmailAndPassword(
@@ -112,11 +110,7 @@ const Login = () => {
                     setErrorMessage(`${error.code} - ${error.message}`);
                   });
               } else {
-                /**
-                 * login the existing user
-                 * upon sign in, add the details to the redux store
-                 * navigate to the browse page
-                 */
+                // TODO: login the existing user
                 signInWithEmailAndPassword(
                   auth,
                   email.current.value,
