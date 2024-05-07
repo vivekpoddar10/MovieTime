@@ -19,4 +19,12 @@ export const API_OPTIONS = {
 };
 
 export const NOW_PLAYING_MOVIE_LIST_API =
-  "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
+  "https://api.themoviedb.org/3/movie/now_playing";
+
+export const TOP_RATED_MOVIE_LIST_API =
+  "https://api.themoviedb.org/3/movie/top_rated";
+
+export const POPULAR_MOVIE_LIST_API =
+  "https://api.themoviedb.org/3/movie/popular";
+
+export const IMAGE_URL = "https://image.tmdb.org/t/p/w500";

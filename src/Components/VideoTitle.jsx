@@ -2,6 +2,7 @@ import React from "react";
 import { FaPlay } from "react-icons/fa";
 import { FaCircleInfo } from "react-icons/fa6";
 
+
 const VideoTitle = ({ original_title, overview }) => {
   return (
     <div className=" w-screen aspect-video absolute pt-[20%] pl-10 flex flex-col bg-gradient-to-r from-black   ">

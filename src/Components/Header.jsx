@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { LOGO } from "../Utils/Constants";
@@ -8,10 +8,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { addDetail, removeDetail } from "../Store/userSlice";
 import { useNavigate } from "react-router-dom";
 
+import { FaMagnifyingGlass, FaUser } from "react-icons/fa6";
+
 const Header = () => {
   const dispatchUser = useDispatch();
   const navigate = useNavigate();
   const subscribeUser = useSelector((store) => store.user.details);
+
+  const [searchEnabled, setSearchEnabled] = useState(false);
 
   useEffect(() => {
     /**
@@ -45,21 +49,48 @@ const Header = () => {
     <div className="absolute w-screen flex justify-between z-10 bg-gradient-to-b	from-black">
       <img src={LOGO} className="w-40 " />
       {subscribeUser.length > 0 && (
-        <div className="flex w-[200px] justify-between items-center mr-5 ">
-          <h2 className=" text-white">Hi, {subscribeUser[0]?.name}</h2>
-          <button
-            className="border rounded-lg p-2 m-2 bg-green-400"
-            onClick={() => {
-              // TODO: Sign out the user
-              signOut(auth)
-                .then(() => {})
-                .catch((error) => {
-                  console.log(error.message);
-                });
-            }}
-          >
-            Sign Out
-          </button>
+        <div className=" w-[90%] flex justify-between">
+          <div className="flex pl-4 gap-2 items-center list-none text-white">
+            <li className="cursor-pointer hover:underline-offset-2">Home</li>
+            <li className="cursor-pointer hover:underline ">TV Shows</li>
+            <li className="cursor-pointer hover:underline ">Movies</li>
+          </div>
+          <div className="flex  w-[45%] justify-end gap-3 items-center mr-5 ">
+            <div className="flex items-center gap-1">
+              {searchEnabled && (
+                <input
+                  type="text"
+                  className="border-2 border-white rounded-xl bg-black"
+                />
+              )}
+              <div
+                className="text-white cursor-pointer"
+                onClick={() => {
+                  setSearchEnabled((prev) => !prev);
+                }}
+              >
+                <FaMagnifyingGlass />
+              </div>
+            </div>
+
+            <h2 className=" text-white">Hi, {subscribeUser[0]?.name} </h2>
+            <div className="text-white text-xl">
+              <FaUser />
+            </div>
+            <button
+              className="border rounded-lg p-2 m-2 bg-green-400"
+              onClick={() => {
+                // TODO: Sign out the user
+                signOut(auth)
+                  .then(() => {})
+                  .catch((error) => {
+                    console.log(error.message);
+                  });
+              }}
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       )}
     </div>
