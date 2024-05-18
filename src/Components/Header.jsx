@@ -8,14 +8,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { addDetail, removeDetail } from "../Store/userSlice";
 import { useNavigate } from "react-router-dom";
 
-import { FaMagnifyingGlass, FaUser } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaUser, FaBars } from "react-icons/fa6";
+
+import { setSearchComponentVisibility } from "../Store/visibilitySlice";
+
+import DropDown from "./DropDown";
 
 const Header = () => {
   const dispatchUser = useDispatch();
   const navigate = useNavigate();
   const subscribeUser = useSelector((store) => store.user.details);
 
-  const [searchEnabled, setSearchEnabled] = useState(false);
+  const [isDropDownVisible, setIsDropDownVisible] = useState(false);
+
+  const dispatchVisibility = useDispatch();
 
   useEffect(() => {
     /**
@@ -46,27 +52,27 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="absolute w-screen flex justify-between z-10 bg-gradient-to-b	from-black">
+    <div className="absolute left-0 w-full flex z-10 bg-gradient-to-b	from-black ">
       <img src={LOGO} className="w-40 " />
       {subscribeUser.length > 0 && (
-        <div className=" w-[90%] flex justify-between">
+        <div className=" w-[90%] flex justify-between ">
           <div className="flex pl-4 gap-2 items-center list-none text-white">
-            <li className="cursor-pointer hover:underline-offset-2">Home</li>
-            <li className="cursor-pointer hover:underline ">TV Shows</li>
-            <li className="cursor-pointer hover:underline ">Movies</li>
+            <li className="cursor-pointer hover:underline hover:underline-offset-8">
+              Home
+            </li>
+            <li className="cursor-pointer hover:underline hover:underline-offset-8 ">
+              TV Shows
+            </li>
+            <li className="cursor-pointer hover:underline hover:underline-offset-8">
+              Movies
+            </li>
           </div>
           <div className="flex  w-[45%] justify-end gap-3 items-center mr-5 ">
             <div className="flex items-center gap-1">
-              {searchEnabled && (
-                <input
-                  type="text"
-                  className="border-2 border-white rounded-xl bg-black"
-                />
-              )}
               <div
                 className="text-white cursor-pointer"
                 onClick={() => {
-                  setSearchEnabled((prev) => !prev);
+                  dispatchVisibility(setSearchComponentVisibility());
                 }}
               >
                 <FaMagnifyingGlass />
@@ -74,22 +80,15 @@ const Header = () => {
             </div>
 
             <h2 className=" text-white">Hi, {subscribeUser[0]?.name} </h2>
-            <div className="text-white text-xl">
-              <FaUser />
-            </div>
-            <button
-              className="border rounded-lg p-2 m-2 bg-green-400"
+            <div
+              className="text-white text-xl cursor-pointer flex flex-col gap-4"
               onClick={() => {
-                // TODO: Sign out the user
-                signOut(auth)
-                  .then(() => {})
-                  .catch((error) => {
-                    console.log(error.message);
-                  });
+                setIsDropDownVisible(!isDropDownVisible);
               }}
             >
-              Sign Out
-            </button>
+              <FaBars className="relative" />
+              {isDropDownVisible && <DropDown />}
+            </div>
           </div>
         </div>
       )}
