@@ -1,7 +1,10 @@
-import React from "react";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import React, { useSyncExternalStore } from "react";
+import language from "../Utils/language";
+import { useSelector } from "react-redux";
 
 const SearchBar = () => {
+  const langSlice = useSelector((store) => store.language.lang);
+
   return (
     <div className="pt-[5%]">
       <form
@@ -11,11 +14,11 @@ const SearchBar = () => {
       >
         <input
           type="text"
-          placeholder="Which movie you would like to watch"
+          placeholder={language[langSlice].placeholder}
           className="w-4/5 rounded-lg p-2 outline-none "
         />
-        <button className="text-white text-2xl ">
-          <FaMagnifyingGlass />
+        <button className="text-white px-4 py-2 bg-red-600 w-1/5 rounded-lg">
+          {language[langSlice].button}
         </button>
       </form>
     </div>

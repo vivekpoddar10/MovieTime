@@ -15,7 +15,7 @@ const Browse = () => {
   useTopRatedMovieList();
 
   const selectVisibility = useSelector((store) => store.visible);
-  console.log(selectVisibility);
+
 
   return (
     <div className=" p-0 m-0">

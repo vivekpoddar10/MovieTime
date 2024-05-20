@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addDetail, removeDetail } from "../Store/userSlice";
 import { useNavigate } from "react-router-dom";
 
-import { FaMagnifyingGlass, FaUser, FaBars } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaBars, FaHouse } from "react-icons/fa6";
 
 import { setSearchComponentVisibility } from "../Store/visibilitySlice";
 
 import DropDown from "./DropDown";
+
+import { selectLanguage } from "../Store/langConfig";
 
 const Header = () => {
   const dispatchUser = useDispatch();
@@ -22,6 +24,10 @@ const Header = () => {
   const [isDropDownVisible, setIsDropDownVisible] = useState(false);
 
   const dispatchVisibility = useDispatch();
+  const searchIcon = useSelector((store) => store.visible.searchComponent);
+
+  const lang = ["English", "Hindi"];
+  const changeLanguage = useDispatch();
 
   useEffect(() => {
     /**
@@ -68,14 +74,23 @@ const Header = () => {
             </li>
           </div>
           <div className="flex  w-[45%] justify-end gap-3 items-center mr-5 ">
-            <div className="flex items-center gap-1">
+            <select
+              className="bg-black text-white bg-opacity-50"
+              onChange={(e) => changeLanguage(selectLanguage(e.target.value))}
+            >
+              {lang.map((item, index) => (
+                <option key={index}>{item}</option>
+              ))}
+            </select>
+
+            <div className="flex items-center">
               <div
                 className="text-white cursor-pointer"
                 onClick={() => {
                   dispatchVisibility(setSearchComponentVisibility());
                 }}
               >
-                <FaMagnifyingGlass />
+                {!searchIcon ? <FaMagnifyingGlass /> : <FaHouse />}
               </div>
             </div>
 
