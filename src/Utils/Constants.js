@@ -27,4 +27,6 @@ export const TOP_RATED_MOVIE_LIST_API =
 export const POPULAR_MOVIE_LIST_API =
   "https://api.themoviedb.org/3/movie/popular";
 
+export const SEARCH_MOVIE_API = "https://api.themoviedb.org/3/search/movie?query=";
+
 export const IMAGE_URL = "https://image.tmdb.org/t/p/w500";

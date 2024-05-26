@@ -3,6 +3,7 @@ import userReducer from "./userSlice";
 import movieReducer from "./movieSlice";
 import visibilityReducer from "./visibilitySlice";
 import langReducer from "./langConfig";
+import searchMovieReducer from "./searchMovie";
 
 const appStore = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const appStore = configureStore({
     movie: movieReducer,
     visible: visibilityReducer,
     language: langReducer,
+    search: searchMovieReducer,
   },
 });
 

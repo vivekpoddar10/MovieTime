@@ -1,9 +1,13 @@
-import React, { useSyncExternalStore } from "react";
+import React, { useRef } from "react";
 import language from "../Utils/language";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { addSearchMovieText } from "../Store/searchMovie";
 
 const SearchBar = () => {
   const langSlice = useSelector((store) => store.language.lang);
+  const searchedMovie = useRef(null);
+  const dispatchSearchMovie = useDispatch();
 
   return (
     <div className="pt-[5%]">
@@ -15,9 +19,16 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder={language[langSlice].placeholder}
+          ref={searchedMovie}
           className="w-4/5 rounded-lg p-2 outline-none "
         />
-        <button className="text-white px-4 py-2 bg-red-600 w-1/5 rounded-lg">
+        <button
+          className="text-white px-4 py-2 bg-red-600 w-1/5 rounded-lg"
+          onClick={() => {
+            console.log(searchedMovie.current.value);
+            dispatchSearchMovie(addSearchMovieText(searchedMovie.current.value));
+          }}
+        >
           {language[langSlice].button}
         </button>
       </form>

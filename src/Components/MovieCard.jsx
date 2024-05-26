@@ -5,7 +5,7 @@ const MovieCard = ({ info }) => {
 
   return (
     <div>
-      <div className="w-40">
+      <div className="w-40 ">
         <img src={IMAGE_URL + info.poster_path} alt="" />
       </div>
     </div>
